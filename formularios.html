@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários</title>
+    
+    <!-- Biblioteca de ícones do Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        fieldset {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        #nome,
+        #email,
+        #senha,
+        #senha2,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        #mensagem-senha {
+            color: red;
+        }
+
+        .entrada{
+            border: solid 1px #4F4F4F;
+            display: flex;
+            border-radius: 3px;
+        }
+        
+        #senha{
+            border: none;
+            flex: 1;
+        }
+
+        #olho{
+            background: none;
+            border: none;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        #senha{
+            margin:0;
+        }
+
+    </style>
+    <script>
+        function verSenha() {
+            let senha = document.getElementById("senha");
+            let olho = document.getElementById("olho");
+            if (senha.type == "password") {
+                senha.type = "text";
+                olho.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                senha.type = "password";
+                olho.classList.replace("bi-eye-slash", "bi-eye");
+            }   
+      }
+
+      function senhaForte(){
+            // Declara a variavel senha e atribui o valor do campo de senha
+            let senha = document.getElementById("senha").value;
+
+            // Declara a variável testeNum e atribui uma expressão regular que verifica se a senha contém:
+            // pelo menos um número
+            let testeNum = /^(?=.*\d)/;
+
+            // pelo menos uma letra minúscula
+            let testMin = /^(?=.*[a-z])/;
+
+            // pelo menos uma letra maiúscula
+            let testMai = /^(?=.*[A-Z])/;
+
+            // pelo menos um caractere especial
+            let testEsp = /^(?=.*[@$!%*?&])/;
+
+            // pelo menos 8 caracteres
+            let testTam = /^.{8,}$/;
+
+            // Declara a variável mensagem e atribui uma string vazia
+            let mensagem = "";
+
+            // Verifica se a senha não corresponde ao testeNum, ou seja, se não contém pelo menos um número
+            if(!senha.match(testeNum)){
+                mensagem = "A senha deve conter pelo menos um número.";
+            } 
+
+            // Verifica se a senha não corresponde ao testMin, ou seja, se não contém pelo menos uma letra minúscula
+            if(!senha.match(testMin) ){
+                mensagem += "<br> A senha deve conter pelo menos uma letra minúscula.";
+            }
+             // Verifica se a senha não corresponde ao testMai, ou seja, se não contém pelo menos uma letra maiúscula
+             if(!senha.match(testMai) ){
+                mensagem += "<br> A senha deve conter pelo menos uma letra maiúscula.";
+            }
+
+            // Verifica se a senha não corresponde ao testEsp, ou seja, se não contém pelo menos um caractere especial
+             if(!senha.match(testEsp) ){
+                mensagem += "<br> A senha deve conter pelo menos um caractere especial.";
+            }
+
+            // Verifica se a senha não corresponde ao testTam, ou seja, se não contém pelo menos 8 caracteres
+             if(!senha.match(testTam) ){
+                mensagem += "<br> A senha deve conter pelo menos 8 caracteres.";
+            }
+            document.getElementById("mensagem-senha").innerHTML = mensagem;
+
+            if(mensagem == ""){
+                document.getElementById("senha2").disabled = false;
+            } else {
+                document.getElementById("senha2").disabled = true;
+            }
+      }
+
+      function senhaIgual(){
+            // Declara a variável senha e atribui o valor do campo de senha
+            let senha = document.getElementById("senha").value;
+
+            // Declara a variável senha2 e atribui o valor do campo de verificar senha
+            let senha2 = document.getElementById("senha2").value;
+
+            // Declara a variável mensagem e atribui uma string vazia
+            let mensagem = "";
+
+            // Verifica se a senha é diferente da senha2, ou seja, se as senhas não são iguais
+            if(senha != senha2){
+                mensagem = "As senhas não são iguais.";
+            }
+            document.getElementById("mensagem-senha2").innerHTML = mensagem;
+
+            if(mensagem == ""){
+                document.getElementById("enviar").disabled = false;
+            } else {
+                document.getElementById("enviar").disabled = true;
+            }
+      }
+    </script>
+</head>
+<body>
+    <form action="https://jkorpela.fi/cgi-bin/echo.cgi" method="post">
+
+        <fieldset>
+            <legend>Dados Pessoais</legend>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome" required>
+            <label for="email">E-mail:</label>
+            <input type="email" name="email" id="email">
+        </fieldset>
+
+        <fieldset>
+            <legend>Dados de Acesso</legend>
+            <input type="radio" name="tipo" id="aluno" value="aluno">
+            <label for="aluno">Aluno</label>
+            <input type="radio" name="tipo" id="professor" value="professor">
+            <label for="professor">Professor</label>
+            <br>
+            <label for="senha">Senha:</label>
+            
+            <div class="entrada">
+            <input onkeyup="senhaForte()"  type="password" name="senha" id="senha">
+            <button type="button" onclick="verSenha()" id="olho" class="bi bi-eye"></button> 
+            </div>
+            
+
+            <p>
+                <span id="mensagem-senha"></span>
+            </p>
+            <label for="senha2">Verificar Senha:</label>
+            <input onkeyup="senhaIgual()" type="password" id="senha2" disabled>
+            <p>
+                <span id="mensagem-senha2"></span>
+            </p>
+        </fieldset>
+
+        <fieldset>
+            <legend>Informações Adicionais</legend>
+            <select name="nivel" id="nivel" required>
+                <option value="">Escolha seu nível</option>
+                <option value="iniciante">Iniciante</option>
+                <option value="intermediario">Intermediário</option>
+                <option value="avancado">Avançado</option>
+            </select>
+            <textarea name="msg" id="msg" placeholder="Digite sua mensagem aqui..."></textarea>
+            <input type="checkbox" name="promo" id="promo" value="sim" checked>
+            <label for="promo">Desejo receber promoções</label>
+        </fieldset>
+
+        <input type="reset" value="Limpar">
+        <input type="submit" value="Cadastrar" disabled id="enviar">
+
+    </form>
+
+    
+</body>
+</html>
